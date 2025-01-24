@@ -92,6 +92,7 @@ where:
         -u = unstamp files
         -v = verbose
 ```
-*disclaimer: These utilities are useful for detecting and removing duplicate files, but should be used with CAUTION!
+*disclaimer:
+These utilities are useful for detecting and removing duplicate files, but should be used with CAUTION!
 
 
