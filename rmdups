@@ -1,0 +1,35 @@
+#!/bin/sh
+# @(#)rmdups.sh  2024-04-10  A.J.Travis
+
+#
+# remove files duplicated in two or more directories
+#
+
+# strip leading "./" from directory names
+dirs=$(echo $* | sed 's?\./??')
+
+thcs=/tmp/thc$$
+
+if [ $# -lt 2 ]; then
+	echo "usage: rmdups dir1 dir2 [dir3 ...]"
+	exit 1
+fi
+
+cat /dev/null > $thcs
+for i in $dirs
+do
+	if [ $# -lt 2 ]; then
+		break
+	fi
+
+	# don't compare a directory with itself ...
+	if [ $1 = $2 ]; then
+		echo "rmdups: can't compare a directory with itself"
+		exit 2
+	fi
+
+	thc -r $1 >> $thcs
+	thc -rdc $thcs $2
+	shift
+done
+rm $thcs

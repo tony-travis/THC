@@ -1,0 +1,31 @@
+#!/bin/bash
+#@(#)flocate  2024-04-01  A.J.Travis
+
+#
+# Locate files by basename with any prefix/suffix
+#
+
+thc=""
+
+if [ "_$1" = "_-c" ]; then
+    thc=true
+    shift
+fi
+
+if [ $# != 1 ]; then
+    echo "usage: flocate [-c] name"
+    exit 1
+fi
+
+name=$(basename "$1")
+updatedb
+if [ $thc ]; then
+    locate -erib0 "^[0-9\.]*$name[0-9\.]*$" \
+    | xargs -0 -L1 -- thc \
+    | sort -k2,2n -k1,1n -k3 \
+    | uniq -w 12 --group=separate \
+    | egrep --colour=always "|$PWD"
+else
+    locate -erib "^[0-9\.]*$name[0-9\.]*$" \
+    | egrep --colour=always "|$PWD"
+fi

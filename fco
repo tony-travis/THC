@@ -1,0 +1,25 @@
+#!/bin/sh
+# @(#)fco.sh  2024-04-08  A.J.Travis
+
+#
+# File check out for rudimentary file-based RCS
+#
+
+if [ $# != 1 ]; then
+	echo "usage: fco filename"
+	exit 1
+fi
+
+file=$1
+
+if [ ! -d .old ]; then
+	echo "fco: no old version directory"
+	exit 1
+fi
+
+latest=$(find .old -type f -name "$file.[0-9]*[0-9]" | sort | tail -1)
+if [ $latest ]; then
+	cp -ip $latest $file
+else
+	echo "fco: no old version of $file"
+fi

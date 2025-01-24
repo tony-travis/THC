@@ -1,0 +1,23 @@
+#!/bin/bash
+# @(#)fci  2011-11-25  A.J.Travis
+
+#
+# Check in for rudimentary file-based RCS
+#
+
+if [ $# != 1 ]; then
+	echo "usage: fci filename"
+	exit 1
+fi
+
+if [ ! -f $1 ]; then
+	echo "fci: can't open $1"
+	exit 1
+fi
+
+if [ ! -d .old ]; then
+	mkdir .old
+fi
+
+cp -ip $1 .old/$1
+stamp .old/$1

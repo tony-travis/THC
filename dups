@@ -1,0 +1,33 @@
+#!/bin/bash
+#@(#)dups  2024-04-10  A.J.Travis
+
+#
+# Find redundant duplicate files
+#
+# Generate list of candidate files or read THC list from STDIN
+#
+
+FILES="$*"
+LIST=/var/tmp/dups.$$
+
+if [ $# == 0 ]; then
+    cat > $LIST
+else
+    if [ "_$1" == "_." ]; then
+	shift
+	FILES="$(pwd) $*"
+    fi
+    find $FILES -type f -size +0 -printf '%12s %p\n' \
+        | sort -k1nr \
+        | uniq -w 12 -D \
+        | sed 's/^[ 0-9]* //' > $LIST
+fi
+
+tr '\n' '\0' < $LIST \
+    | xargs -0 -L1 -- thc \
+    | fgrep -v '(directory)' \
+    | sort -k2nr -k1 -k3 -k4 \
+    | uniq -w 12 --all-repeated=separate \
+    | egrep --colour=always "|$PWD"
+
+rm $LIST

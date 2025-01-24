@@ -1,0 +1,13 @@
+#!/bin/bash
+#@(#)thc-format  2024-04-10  A.J.Travis
+
+#
+# Format thc lists with blanks between groups
+#
+
+if [ "_$1" = "_-d" ]; then
+    dups="--all-repeated"
+else
+    dups="--group"
+fi
+sort -k2nr -k1 -k3 -k4 $* | uniq -w 12 $dups=separate

@@ -1,0 +1,37 @@
+#!/bin/bash
+# @(#)fdiff.sh  2016-10-11  A.J.Travis
+
+#
+# Version diff for rudimentary file-based RCS
+#
+
+version=-1
+
+if [ $# = 2 ]; then
+	version=$1
+	shift
+fi
+if [ $# != 1 ]; then
+	echo "usage: fdiff [-#] filename"
+	echo "where: -# selects saved version #"
+	exit 1
+fi
+
+new=$1
+file=`basename $new`
+dir=`dirname $new`
+if [ $dir = '.' ]; then
+	target='.old'
+else
+	target=$dir/.old
+fi
+
+if [ ! -d $target ]; then
+	echo "fdiff: no .old version directory"
+fi
+old=$(find $target -name "$file\.[0-9]*" -o -name "[0-9]*\.$file" | sort -r | head $version | tail -1)
+if [ $old ]; then
+	diff -Naur $old $new
+else
+	echo "fdiff: no .old version of $new"
+fi
