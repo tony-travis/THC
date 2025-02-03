@@ -8,7 +8,7 @@ usage:
         thc [-r][-d][-f][-i][-c THC-list] files
 where:
         -r = recurse through folders
-        -d = delete files with matching hash code, filessize, date and time of modification, and filename
+        -d = delete files with matching hash code, filesize, date and time of modification, and filename
         -f = ignore date and time of modification, and filename when matching tagged hash codes
         -i = ignore case of filename
         -c = compare matching file in THC-list
